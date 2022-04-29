@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 import pastebin
 
 DB_NAME = 'data.db'
-LOGFILE_NAME = '/home/bitnami/pastebin/pastebin.log'
+LOGFILE_NAME = 'pastebin.log'
 pastebin.DEFAULT_DB_NAME = DB_NAME
 logging.basicConfig(filename=LOGFILE_NAME, level=logging.INFO)
 
@@ -28,6 +28,10 @@ def create_app():
     def set_connection():
         if 'links' not in g:
             g.links = pastebin.connect(app.config['DB_FILE'])
+
+    @app.route("/favicon.ico", methods=["GET"])
+    def favicon():
+        return send_file("files/favicon.ico")
 
     @app.route("/paste", methods=["GET"])
     @app.route("/", methods=["GET"])
