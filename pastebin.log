@@ -1,0 +1,65 @@
+INFO:werkzeug: * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+ERROR:app:Exception on /dbo [GET]
+Traceback (most recent call last):
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 2077, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1526, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1545, in finalize_request
+    response = self.make_response(rv)
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1727, in make_response
+    raise TypeError(
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1725, in make_response
+    rv = self.response_class.force_type(rv, request.environ)  # type: ignore  # noqa: B950
+  File "/home/centipeda/.local/lib/python3.8/site-packages/werkzeug/wrappers/response.py", line 268, in force_type
+    response = Response(*run_wsgi_app(response, environ))
+  File "/home/centipeda/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1236, in run_wsgi_app
+    app_rv = app(environ, start_response)
+TypeError: function takes exactly 1 argument (2 given)
+The view function did not return a valid response. The return type must be a string, dict, tuple, Response instance, or WSGI callable, but it was a Connection.
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:22:26] "[35m[1mGET /dbo HTTP/1.1[0m" 500 -
+ERROR:app:Exception on /dbo [GET]
+Traceback (most recent call last):
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 2077, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1526, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1545, in finalize_request
+    response = self.make_response(rv)
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1727, in make_response
+    raise TypeError(
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1725, in make_response
+    rv = self.response_class.force_type(rv, request.environ)  # type: ignore  # noqa: B950
+  File "/home/centipeda/.local/lib/python3.8/site-packages/werkzeug/wrappers/response.py", line 268, in force_type
+    response = Response(*run_wsgi_app(response, environ))
+  File "/home/centipeda/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1236, in run_wsgi_app
+    app_rv = app(environ, start_response)
+TypeError: function takes exactly 1 argument (2 given)
+The view function did not return a valid response. The return type must be a string, dict, tuple, Response instance, or WSGI callable, but it was a Connection.
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:22:45] "[35m[1mGET /dbo HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+ERROR:app:Exception on /dbo [GET]
+Traceback (most recent call last):
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 2077, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1525, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1523, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/centipeda/.local/lib/python3.8/site-packages/flask/app.py", line 1509, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/mnt/c/Users/criti/Desktop/Projects/pastebin/app.py", line 72, in link
+    conn = get_connection()
+NameError: name 'get_connection' is not defined
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:24:24] "[35m[1mGET /dbo HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+INFO:root:querying shortcode dbo...
+INFO:root:sending dbo.jpg
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:24:46] "GET /dbo HTTP/1.1" 200 -
+INFO:werkzeug: * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+INFO:root:ParseResult(scheme='https', netloc='centipeda.cc', path='', params='', query='', fragment='')
+INFO:root:got link to URL https://centipeda.cc
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:28:14] "POST /short HTTP/1.1" 200 -
+INFO:root:querying shortcode vNh...
+INFO:root:redirecting to https://centipeda.cc
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 18:28:19] "[32mGET /vNh HTTP/1.1[0m" 302 -
