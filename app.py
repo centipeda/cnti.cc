@@ -1,5 +1,6 @@
 
 # standard library
+import os
 import io
 import mimetypes
 import logging
@@ -32,6 +33,13 @@ def create_app():
     @app.route("/favicon.ico", methods=["GET"])
     def favicon():
         return send_file("files/favicon.ico")
+
+    @app.route("/files/<string:raw_filename>", methods=["GET"])
+    def staticfile(raw_filename: str):
+        allowed_files = ["clipboard.png", "clipboard.svg"]
+        filename = secure_filename(raw_filename)
+        if filename in allowed_files:
+            return send_file(os.path.join('files', filename))
 
     @app.route("/paste", methods=["GET"])
     @app.route("/", methods=["GET"])

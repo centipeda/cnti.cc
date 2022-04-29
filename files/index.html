@@ -16,11 +16,13 @@
 
         .pasteable {
             width: 100px;
-            height: 50px;
+            height: 100px;
             margin: auto;
-            border: 1px black solid;
-            color: #000000;
-            background-color: #000000;
+            border: 1px white solid;
+            color: #ffffff;
+            background-color: #ffffff;
+            background-image: url('files/clipboard.svg');
+            background-size: 100px;
             cursor: default;
         }
 
@@ -40,7 +42,7 @@
         <p>paste here:</p>
     </div>
     <div contenteditable="true" class="pasteable" oninput="event.stopPropagation()">
-        paste here
+        &nbsp;
     </div>
     <div class="info">
         <p class="status"></p>
