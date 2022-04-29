@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 import pastebin
 
 DB_NAME = 'data.db'
-LOGFILE_NAME = 'pastebin.log'
+LOGFILE_NAME = '/home/bitnami/pastebin/pastebin.log'
 pastebin.DEFAULT_DB_NAME = DB_NAME
 logging.basicConfig(filename=LOGFILE_NAME, level=logging.INFO)
 
@@ -32,7 +32,7 @@ def create_app():
     @app.route("/paste", methods=["GET"])
     @app.route("/", methods=["GET"])
     def index():
-        return "Welcome to the pastebin."
+        return "cnti.cc"
 
     @app.route("/paste", methods=["POST"])
     def paste():
