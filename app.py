@@ -32,7 +32,7 @@ def create_app():
 
     @app.route("/favicon.ico", methods=["GET"])
     def favicon():
-        return send_file("files/favicon.ico")
+        return send_file("files/clipboard.ico")
 
     @app.route("/files/<string:raw_filename>", methods=["GET"])
     def staticfile(raw_filename: str):

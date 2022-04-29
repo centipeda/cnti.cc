@@ -18,12 +18,13 @@
             width: 100px;
             height: 100px;
             margin: auto;
-            border: 1px white solid;
+            outline: 0px solid transparent;
             color: #ffffff;
             background-color: #ffffff;
             background-image: url('files/clipboard.svg');
             background-size: 100px;
             cursor: default;
+            caret-color: transparent;
         }
 
         .pasteable::selection {
@@ -33,6 +34,11 @@
         .info {
             margin: auto;
             text-align: center;
+        }
+
+        .pastebutton {
+            margin: auto;
+            display: none;
         }
     </style>
 </head>
@@ -46,16 +52,20 @@
     </div>
     <div class="info">
         <p class="status"></p>
-        <button class="pastebutton" onclick="paste()">PASTE</button>
+        <button class="pastebutton image" onclick="pasteImage()">PASTE IMAGE</button>
+        <button class="pastebutton text" onclick="pasteText()">PASTE TEXT</button>
     </div>
     <script>
         const target = document.querySelector('div.pasteable');
-        let loaded = false;
-        let data = null;
+        let imageLoaded = false;
+        let textLoaded = false;
+        let img = null;
+        let txt = null;
         target.addEventListener('paste', async function(e) {
             e.preventDefault();
             const status = document.querySelector('p.status');
-            const button = document.querySelector('button.pastebutton');
+            const tButton = document.querySelector('button.text');
+            const iButton = document.querySelector('button.image');
             const contents = await navigator.clipboard.read();
             if(contents.length === 0)
                 return;
@@ -63,15 +73,19 @@
             console.log(item.types);
             if(item.types.includes('image/png')) {
                 const blob = await item.getType('image/png');
-                status.textContent = "Loaded image.";
-                button.textContent = "PASTE IMAGE";
                 console.log(blob);
-                loaded = true;
-                data = blob;
-            } else if(item.types.includes('text/plain')) {
-                const text = await navigator.clipboard.readText();
-                status.textContent = "Loaded text.";
-                console.log(text);
+                status.textContent = "Loaded.";
+                iButton.style.display = "block";
+                imageLoaded = true;
+                img = blob;
+            } 
+            if(item.types.includes('text/plain')) {
+                const blob = await item.getType('text/plain');
+                console.log(blob);
+                status.textContent = "Loaded.";
+                tButton.style.display = "block";
+                textLoaded = true;
+                txt = blob;
             }
             return;
             navigator.clipboard.read().then().then((contents) => {
@@ -86,11 +100,12 @@
         
         });
 
-        function paste() {
-            if(loaded) {
-                console.log("trying to paste...", data);
+        function pasteImage() {
+            const status = document.querySelector('p.status');
+            if(imageLoaded) {
+                console.log("trying to paste...", img);
                 var form = new FormData();
-                form.append("image", data, "image.png");
+                form.append("data", img, "file.png");
                 fetch("/paste", {
                     method: "POST",
                     body: form
@@ -102,7 +117,29 @@
                     }
                 });
             } else {
-                console.log("no data loaded");
+                status.textContent = "No data loaded.";
+                return;
+            }
+        }
+
+        function pasteText() {
+            const status = document.querySelector('p.status');
+            if(textLoaded) {
+                console.log("trying to paste...", txt);
+                var form = new FormData();
+                form.append("data", txt, "file.txt");
+                fetch("/paste", {
+                    method: "POST",
+                    body: form
+                }).then(response => {
+                    if(response.status == 200) {
+                        response.text().then(url => 
+                            window.location.replace("https://" + url)
+                        );
+                    }
+                });
+            } else {
+                status.textContent = "No data loaded.";
                 return;
             }
         }
