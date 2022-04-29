@@ -3,7 +3,8 @@
 import waitress
 import flask
 
-app = flask.Flask(__name__)
+from app import create_app
 
 if __name__ == "__main__":
+    app = create_app()
     waitress.serve(app, port=5260)

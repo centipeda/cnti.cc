@@ -107,5 +107,3 @@ def create_app():
         return abort(404)
 
     return app
-
-create_app()
