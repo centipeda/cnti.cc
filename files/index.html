@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cnti.cc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Source Code Pro", monospace;
+        }
+
+        .pasteable {
+            width: 100px;
+            height: 50px;
+            margin: auto;
+            border: 1px black solid;
+            color: #000000;
+            background-color: #000000;
+            cursor: default;
+        }
+
+        .pasteable::selection {
+            background: rgba(0,0,0,0);
+        }
+
+        .info {
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>cnti.cc</h1>
+        <p>paste here:</p>
+    </div>
+    <div contenteditable="true" class="pasteable" oninput="event.stopPropagation()">
+        paste here
+    </div>
+    <div class="info">
+        <p class="status"></p>
+        <button class="pastebutton" onclick="paste()">PASTE</button>
+    </div>
+    <script>
+        const target = document.querySelector('div.pasteable');
+        let loaded = false;
+        let data = null;
+        target.addEventListener('paste', async function(e) {
+            e.preventDefault();
+            const status = document.querySelector('p.status');
+            const button = document.querySelector('button.pastebutton');
+            const contents = await navigator.clipboard.read();
+            if(contents.length === 0)
+                return;
+            const item = contents.pop();
+            console.log(item.types);
+            if(item.types.includes('image/png')) {
+                const blob = await item.getType('image/png');
+                status.textContent = "Loaded image.";
+                button.textContent = "PASTE IMAGE";
+                console.log(blob);
+                loaded = true;
+                data = blob;
+            } else if(item.types.includes('text/plain')) {
+                const text = await navigator.clipboard.readText();
+                status.textContent = "Loaded text.";
+                console.log(text);
+            }
+            return;
+            navigator.clipboard.read().then().then((contents) => {
+                for(const item of contents) {
+                    for(const type of item.types) {
+                        item.getType(type).then((c) => {
+                            console.log(URL.createObjectURL(c));
+                        })
+                    }
+                }
+            });
+        
+        });
+
+        function paste() {
+            if(loaded) {
+                console.log("trying to paste...", data);
+                var form = new FormData();
+                form.append("image", data, "image.png");
+                fetch("/paste", {
+                    method: "POST",
+                    body: form
+                }).then(response => {
+                    if(response.status == 200) {
+                        response.text().then(url => 
+                            window.location.replace("https://" + url)
+                        );
+                    }
+                });
+            } else {
+                console.log("no data loaded");
+                return;
+            }
+        }
+    </script>
+</body>
+</html>

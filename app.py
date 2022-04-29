@@ -36,7 +36,7 @@ def create_app():
     @app.route("/paste", methods=["GET"])
     @app.route("/", methods=["GET"])
     def index():
-        return "cnti.cc"
+        return send_file("files/index.html")
 
     @app.route("/paste", methods=["POST"])
     def paste():
@@ -44,6 +44,7 @@ def create_app():
             files = request.files.values()
             file = next(files)
         except StopIteration:
+            logging.info(request.files)
             abort(400, 'no file uploaded')
         if len(request.files) > 1:
             abort(400, description='too many files')
