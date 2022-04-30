@@ -19,7 +19,7 @@
             height: 100px;
             margin: auto;
             outline: 0px solid transparent;
-            color: #ffffff;
+            color: rgba(0,0,0,0);
             background-color: #ffffff;
             background-image: url('files/clipboard.svg');
             background-size: 100px;
@@ -40,6 +40,11 @@
             margin: auto;
             display: none;
         }
+
+        .pasteinfo {
+            display: none;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
@@ -47,13 +52,16 @@
         <h1>cnti.cc</h1>
         <p>paste here:</p>
     </div>
-    <div contenteditable="true" class="pasteable" oninput="event.stopPropagation()">
+    <div contenteditable="true" class="pasteable" spellcheck="false" oninput="event.stopPropagation()">
         &nbsp;
     </div>
     <div class="info">
         <p class="status"></p>
         <button class="pastebutton image" onclick="pasteImage()">PASTE IMAGE</button>
         <button class="pastebutton text" onclick="pasteText()">PASTE TEXT</button>
+        <br>
+        <img class="pasteinfo imgpaste" src="" alt="">
+        <pre class="pasteinfo txtpaste"></pre>
     </div>
     <script>
         const target = document.querySelector('div.pasteable');
@@ -63,9 +71,12 @@
         let txt = null;
         target.addEventListener('paste', async function(e) {
             e.preventDefault();
+            if(imageLoaded || textLoaded) return;
             const status = document.querySelector('p.status');
             const tButton = document.querySelector('button.text');
             const iButton = document.querySelector('button.image');
+            const imgInfo = document.querySelector('img.imgpaste');
+            const txtInfo = document.querySelector('pre.txtpaste');
             const contents = await navigator.clipboard.read();
             if(contents.length === 0)
                 return;
@@ -73,7 +84,8 @@
             console.log(item.types);
             if(item.types.includes('image/png')) {
                 const blob = await item.getType('image/png');
-                console.log(blob);
+                imgInfo.src = URL.createObjectURL(blob);
+                imgInfo.style.display = 'block';
                 status.textContent = "Loaded.";
                 iButton.style.display = "block";
                 imageLoaded = true;
@@ -81,7 +93,8 @@
             } 
             if(item.types.includes('text/plain')) {
                 const blob = await item.getType('text/plain');
-                console.log(blob);
+                txtInfo.textContent = await blob.text();
+                txtInfo.style.display = 'block';
                 status.textContent = "Loaded.";
                 tButton.style.display = "block";
                 textLoaded = true;
@@ -103,6 +116,7 @@
         function pasteImage() {
             const status = document.querySelector('p.status');
             if(imageLoaded) {
+
                 console.log("trying to paste...", img);
                 var form = new FormData();
                 form.append("data", img, "file.png");
