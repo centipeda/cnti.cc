@@ -48,6 +48,16 @@
             max-width: 75vw;
             white-space: pre-wrap;
         }
+
+        .linkinfo {
+            display: none;
+            text-align: center;
+            margin: auto;
+        }
+
+        .linkurl {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +72,9 @@
         <p class="status"></p>
         <button class="pastebutton image" onclick="pasteImage()">PASTE IMAGE</button>
         <button class="pastebutton text" onclick="pasteText()">PASTE TEXT</button>
+        <button class="pastebutton link" onclick="shortLink()">CREATE SHORTLINK</button>
         <br>
+        <p class="linkinfo shorturl">Your shortlink is: </p><a class="linkurl" href="">o</a>
         <img class="pasteinfo imgpaste" src="" alt="">
         <pre class="pasteinfo txtpaste"></pre>
     </div>
@@ -70,16 +82,32 @@
         const target = document.querySelector('div.pasteable');
         let imageLoaded = false;
         let textLoaded = false;
+        let linkLoaded = false;
         let img = null;
         let txt = null;
+        let url = null;
+
+        function isUrl(s) {
+            let url;
+            try {
+                url = new URL(s);
+            } catch (_) {
+                return false;
+            }
+            return url.protocol === "http:" || url.protocol === "https:";
+        }
+
         target.addEventListener('paste', async function(e) {
             e.preventDefault();
-            if(imageLoaded || textLoaded) return;
+            if(imageLoaded || textLoaded || linkLoaded) return;
             const status = document.querySelector('p.status');
             const tButton = document.querySelector('button.text');
             const iButton = document.querySelector('button.image');
+            const lButton = document.querySelector('button.link');
             const imgInfo = document.querySelector('img.imgpaste');
             const txtInfo = document.querySelector('pre.txtpaste');
+            const urlInfo = document.querySelector('p.shorturl')
+            const urlLink = document.querySelector('a.linkurl')
             const contents = await navigator.clipboard.read();
             if(contents.length === 0)
                 return;
@@ -89,19 +117,32 @@
                 const blob = await item.getType('image/png');
                 imgInfo.src = URL.createObjectURL(blob);
                 imgInfo.style.display = 'block';
-                status.textContent = "Loaded.";
+                status.textContent = "Loaded image.";
                 iButton.style.display = "block";
                 imageLoaded = true;
                 img = blob;
             } 
             if(item.types.includes('text/plain')) {
                 const blob = await item.getType('text/plain');
-                txtInfo.textContent = await blob.text();
-                txtInfo.style.display = 'block';
-                status.textContent = "Loaded.";
-                tButton.style.display = "block";
-                textLoaded = true;
-                txt = blob;
+                const text = await blob.text();
+                txtInfo.textContent = text;
+                if(isUrl(text)) {
+                    status.textContent = "Loaded link.";
+                    urlInfo.textContent = 'URL to shorten: '
+                    urlLink.text = text;
+                    urlLink.href = text;
+                    urlLink.style.display = 'block';
+                    lButton.style.display = 'block';
+                    urlInfo.style.display = 'block';
+                    url = text;
+                    linkLoaded = true;
+                } else {
+                    status.textContent = "Loaded text.";
+                    txtInfo.style.display = 'block';
+                    tButton.style.display = "block";
+                    txt = blob;
+                    textLoaded = true;
+                }
             }
             return;
             navigator.clipboard.read().then().then((contents) => {
@@ -119,7 +160,6 @@
         function pasteImage() {
             const status = document.querySelector('p.status');
             if(imageLoaded) {
-
                 console.log("trying to paste...", img);
                 var form = new FormData();
                 form.append("data", img, "file.png");
@@ -131,6 +171,8 @@
                         response.text().then(url => 
                             window.location.replace("https://" + url)
                         );
+                    } else {
+                        console.log(response);
                     }
                 });
             } else {
@@ -153,11 +195,35 @@
                         response.text().then(url => 
                             window.location.replace("https://" + url)
                         );
+                    } else {
+                        console.log(response);
                     }
                 });
             } else {
                 status.textContent = "No data loaded.";
                 return;
+            }
+        }
+
+        function shortLink() {
+            const urlInfo = document.querySelector('p.shorturl');
+            const urlLink = document.querySelector('a.linkurl');
+            if(linkLoaded) {
+                console.log("trying to link...", url);
+                fetch("/short", {
+                    method: "POST",
+                    body: url
+                }).then(response => {
+                    if(response.status == 200) {
+                        response.text().then(short => {
+                            urlInfo.textContent = "Shortened link: "
+                            urlLink.text = "https://" + short;
+                            urlLink.href = "https://" + short;
+                        })
+                    } else {
+                        console.log(response);
+                    }
+                })
             }
         }
     </script>
