@@ -12,6 +12,7 @@
     <style>
         body {
             font-family: "Source Code Pro", monospace;
+            font-size: 12pt;
         }
 
         .pasteable {
@@ -45,7 +46,7 @@
             display: none;
             margin: auto;
             text-align: left;
-            max-width: 75vw;
+            max-width: 500px;
             white-space: pre-wrap;
         }
 
@@ -57,6 +58,23 @@
 
         .linkurl {
             display: none;
+        }
+
+        .instructions {
+            display: block;
+            width: 500px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .code {
+            font-family: monospace;
+            font-size: 10pt;
+            padding: 0.8rem;
+            border-radius: 0.2rem;
+            background-color: lightgrey;
+            color: black;
+            border: 1px black solid;
         }
     </style>
 </head>
@@ -77,6 +95,12 @@
         <p class="linkinfo shorturl">Your shortlink is: </p><a class="linkurl" href="">o</a>
         <img class="pasteinfo imgpaste" src="" alt="">
         <pre class="pasteinfo txtpaste"></pre>
+    </div>
+    <div class="instructions">
+        <p>or use curl for pasting a file:</p>
+        <p class="code">curl -X POST -F --file=@filename https://cnti.cc/paste</p>
+        <p>or creating a shortlink:</p>
+        <p class="code">curl -X POST -d "https://example.com" https://cnti.cc/short</p>
     </div>
     <script>
         const target = document.querySelector('div.pasteable');
