@@ -15,6 +15,10 @@
             font-size: 12pt;
         }
 
+        h1 {
+            font-size: 30pt;
+        }
+
         .pasteable {
             width: 100px;
             height: 100px;
@@ -35,6 +39,7 @@
         .info {
             margin: auto;
             text-align: center;
+            max-width: 100%;
         }
 
         .pastebutton {
@@ -62,9 +67,20 @@
 
         .instructions {
             display: block;
-            width: 500px;
             margin: auto;
             text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .instructions {
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .instructions {
+                max-width: 500px;
+            }
         }
 
         .code {
@@ -72,8 +88,8 @@
             font-size: 10pt;
             padding: 0.8rem;
             border-radius: 0.2rem;
-            background-color: lightgrey;
-            color: black;
+            background-color: #f0f0f0;
+            color: #333333;
             border: 1px black solid;
         }
     </style>
@@ -83,9 +99,7 @@
         <h1>cnti.cc</h1>
         <p>paste here:</p>
     </div>
-    <div contenteditable="true" class="pasteable" spellcheck="false" oninput="event.stopPropagation()">
-        &nbsp;
-    </div>
+    <div contenteditable="true" class="pasteable" spellcheck="false" oninput="event.stopPropagation()"></div>
     <div class="info">
         <p class="status"></p>
         <button class="pastebutton image" onclick="pasteImage()">PASTE IMAGE</button>
