@@ -10,22 +10,22 @@ from flask import Flask, redirect, request, g, abort, send_file
 from werkzeug.utils import secure_filename
 
 # our libraries
-import pastebin
+import pastebin.links as links
 
 DB_NAME = 'data.db'
 LOGFILE_NAME = 'pastebin.log'
-pastebin.DEFAULT_DB_NAME = DB_NAME
+links.DEFAULT_DB_NAME = DB_NAME
 logging.basicConfig(filename=LOGFILE_NAME, level=logging.INFO)
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
     app.config['DB_FILE'] = DB_NAME
     app.config['MAX_CONTENT_LENGTH'] = 1000*1000*1000
 
     if not os.path.exists("data.db"):
-        pastebin.reset_db(override=True)
+        links.reset_db(override=True)
     try:
-        pastebin.connect(app.config['DB_FILE'])
+        links.connect(app.config['DB_FILE'])
     except Exception as e:
         print('failed to load links database:', e)
         exit(1)
@@ -36,7 +36,7 @@ def create_app():
     @app.before_request
     def set_connection():
         if 'links' not in g:
-            g.links = pastebin.connect(app.config['DB_FILE'])
+            g.links = links.connect(app.config['DB_FILE'])
 
     @app.route("/favicon.ico", methods=["GET"])
     def favicon():
@@ -65,14 +65,14 @@ def create_app():
         if len(request.files) > 1:
             abort(400, description='too many files')
         filename = secure_filename(file.filename)
-        mimetype = pastebin.get_mimetype(filename)
+        mimetype = links.get_mimetype(filename)
         with io.BytesIO() as buf:
             data = b''
             file.save(buf)
             buf.seek(0)
             data = buf.read()
         conn = get_connection()
-        shortcode = pastebin.paste(conn, type='file', mimetype=mimetype, data=data)
+        shortcode = links.paste(conn, type='file', mimetype=mimetype, data=data)
         if shortcode:
             return f"{request.host}/{shortcode}"
         abort(500, description="Failed to create pastelink.")
@@ -81,9 +81,9 @@ def create_app():
     def short():
         raw_data = request.get_data()
         body_data = raw_data.decode('utf8')
-        if pastebin.is_url(body_data):
+        if links.is_url(body_data):
             conn = get_connection()
-            shortcode = pastebin.paste(conn, 'link', url=body_data)
+            shortcode = links.paste(conn, 'link', url=body_data)
             if shortcode:
                 return f"{request.host}/{shortcode}"
             abort(500, description="Failed to create shortlink.")
@@ -92,7 +92,7 @@ def create_app():
     @app.route("/<string:link_id>", methods=["GET"])
     def link(link_id):
         conn = get_connection()
-        link = pastebin.get(conn, link_id)
+        link = links.get(conn, link_id)
         if link:
             if link['type'] == 'link':
                 logging.info(f'redirecting to {link["url"]}')
@@ -102,7 +102,7 @@ def create_app():
                 ext = mimetypes.guess_extension(link['mimetype'])
                 if ext is None:
                     ext = ""
-                shown_mtype = pastebin.get_pres_mimetype(link['mimetype'])
+                shown_mtype = links.get_pres_mimetype(link['mimetype'])
 
                 # construct mimetype from extension
                 fname = f"{link_id}{ext}"
