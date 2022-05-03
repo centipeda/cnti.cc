@@ -1,5 +1,7 @@
 # `cnti.cc`
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A simple pastebin built with Flask and sqlite3. Now supports dark mode!
 
 ## usage
