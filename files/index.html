@@ -27,8 +27,6 @@
             outline: 0px solid transparent;
             color: rgba(0,0,0,0);
             background-color: #ffffff;
-            background-image: url('files/clipboard.svg');
-            background-size: 100px;
             cursor: default;
             caret-color: transparent;
         }
@@ -121,7 +119,7 @@
                 border: 1px white solid;
                 color: #f0f0f0;
                 background-color: #333333;
-                border: 1px black solid;
+                border: 1px white solid;
             }
 
             .reveal {
@@ -135,7 +133,19 @@
         <h1>cnti.cc</h1>
         <p>paste here:</p>
     </div>
-    <div contenteditable="true" class="pasteable" spellcheck="false" oninput="event.stopPropagation()"></div>
+    <div contenteditable="true" class="pasteable" spellcheck="false" oninput="event.stopPropagation()">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+        <g>
+            <g>
+                <path d="M36.571,0v512h438.857V0H36.571z M350.041,94.041h31.347v219.429h-104.49v104.49H130.612V94.041h31.347v31.347h188.082
+                    V94.041z M359.222,344.816l-50.977,50.977v-50.977H359.222z M193.306,31.347h125.388v62.694H193.306V31.347z M444.082,480.653
+                    H67.918V31.347h94.041v31.347H99.265v386.612h199.798l113.671-113.671V62.694h-62.694V31.347h94.041V480.653z"/>
+            </g>
+        </g>
+        </svg>
+        &nbsp;
+    </div>
     <div class="info">
         <p class="status"></p>
         <button class="pastebutton image" onclick="pasteImage()">PASTE IMAGE</button>
@@ -147,13 +157,12 @@
         <pre class="pasteinfo txtpaste"></pre>
     </div>
     <div class="instructions">
-        <p>or use curl for pasting a file:</p>
+        <p>or use curl:</p>
         <p class="code">curl -X POST -F --file=@filename https://cnti.cc/paste</p>
-        <p>or creating a shortlink:</p>
         <p class="code">curl -X POST -d "https://example.com" https://cnti.cc/short</p>
     </div>
     <div class="footer">
-        <p>built with Flask<span class="reveal">. dark mode enabled</span></p>
+        <p>built with Flask<span class="reveal">, dark mode enabled</span></p>
     </div>
     <script>
         const target = document.querySelector('div.pasteable');
