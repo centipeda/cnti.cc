@@ -105,6 +105,10 @@
             display: none;
         }
 
+        a {
+            text-decoration: none;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: black;
@@ -124,6 +128,14 @@
 
             .reveal {
                 display: inline;
+            }
+
+            a:link {
+                color: mediumaquamarine;
+            }
+
+            a:visited {
+                color:mediumpurple;
             }
         }
     </style>
@@ -157,12 +169,12 @@
         <pre class="pasteinfo txtpaste"></pre>
     </div>
     <div class="instructions">
-        <p>or use curl:</p>
+        <p>or use cURL:</p>
         <p class="code">curl -X POST -F --file=@filename https://cnti.cc/paste</p>
         <p class="code">curl -X POST -d "https://example.com" https://cnti.cc/short</p>
     </div>
     <div class="footer">
-        <p>built with Flask<span class="reveal">, dark mode enabled</span></p>
+        <p><a href="https://github.com/centipeda/cnti.cc">built with Flask</a> by <a href="https://centipeda.cc">centipeda</a><span class="reveal">, dark mode enabled</span></p>
     </div>
     <script>
         const target = document.querySelector('div.pasteable');
