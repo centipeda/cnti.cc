@@ -22,6 +22,14 @@ def create_app():
     app.config['DB_FILE'] = DB_NAME
     app.config['MAX_CONTENT_LENGTH'] = 1000*1000*1000
 
+    if not os.path.exists("data.db"):
+        pastebin.reset_db(override=True)
+    try:
+        pastebin.connect(app.config['DB_FILE'])
+    except Exception as e:
+        print('failed to load links database:', e)
+        exit(1)
+
     def get_connection():
         return g.get('links')
 
