@@ -40,19 +40,19 @@ def create_app() -> Flask:
 
     @app.route("/favicon.ico", methods=["GET"])
     def favicon():
-        return send_file("files/clipboard.ico")
+        return send_file(os.path.join('..', 'files', 'clipboard.ico'))
 
     @app.route("/files/<string:raw_filename>", methods=["GET"])
     def staticfile(raw_filename: str):
         allowed_files = ["clipboard.png", "clipboard.svg"]
         filename = secure_filename(raw_filename)
         if filename in allowed_files:
-            return send_file(os.path.join('files', filename))
+            return send_file(os.path.join('..', 'files', filename))
 
     @app.route("/paste", methods=["GET"])
     @app.route("/", methods=["GET"])
     def index():
-        return send_file("files/index.html")
+        return send_file(os.path.join('..', 'files', 'index.html'))
 
     @app.route("/paste", methods=["POST"])
     def paste():
