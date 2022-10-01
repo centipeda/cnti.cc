@@ -12,17 +12,9 @@ Install Flask and Waitress. Run
 ./run.py
 ```
 
-## other
+to start the server. The default port is 5260, but can be specified with
 
-setup nginx:
 ```
-sudo ln -s $(pwd)/conf/pastebin.conf /etc/nginx/sites-enabled/
+./run.py -p $port
 ```
 
-setup service:
-```
-systemctl --user enable conf/pastebin.service
-systemctl --user start pastebin
-# enable linger
-sudo userctl enable-linger $USER
-```
